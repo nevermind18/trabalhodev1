@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping
+@RequestMapping(value = "endereco")
 public class EnderecoController {
 
     @Autowired
