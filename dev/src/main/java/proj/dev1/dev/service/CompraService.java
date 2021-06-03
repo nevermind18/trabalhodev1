@@ -1,41 +1,47 @@
-package proj.dev1.dev.service;
+package proj.dev1.dev.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.*;
 import proj.dev1.dev.model.Compra;
-import proj.dev1.dev.repository.CompraRepository;
+import proj.dev1.dev.service.CompraService;
 
 import java.util.List;
 import java.util.Optional;
 
-@Service
-public class CompraService {
+@RestController
+@RequestMapping(value = "/Compra")
+public class CompraController {
 
     @Autowired
-    CompraRepository compraRepository;
+    CompraService compraService;
 
-    public Compra cadastrar(Compra compra){
+    @PostMapping("/")
+    public Compra cadastrar(@RequestBody Compra compra){
 
-        return compraRepository.save(compra);
+        return compraService.cadastrar(compra);
     }
 
-    public Optional<Compra> buscarPorId(long id){
-        return compraRepository.findById(id);
-    }
-
+    @GetMapping("/")
     public List<Compra> listarTodos(){
 
-        return compraRepository.findAll();
+        return compraService.listarTodos();
     }
 
-    public Compra alterar(Compra compra){
-
-        return compraRepository.save(compra);
+    @GetMapping("/{id}")
+    public Optional<Compra> buscarPorId(@PathVariable int id){
+        return compraService.buscarPorId(id);
     }
 
-    public void deletar(Compra compra){
+    @PutMapping("/")
+    public Compra alterar(@RequestBody Compra compra){
 
-        compraRepository.delete(compra);
+        return compraService.alterar(compra);
+    }
+
+    @DeleteMapping("/")
+    public void deletar(@RequestBody Compra compra){
+
+        compraService.deletar(compra);
     }
 
 }
