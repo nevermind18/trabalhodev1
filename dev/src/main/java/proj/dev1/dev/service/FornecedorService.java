@@ -14,7 +14,12 @@ public class FornecedorService {
     @Autowired
     FornecedorRepository fornecedorRepository;
 
+    @Autowired
+    EnderecoService enderecoService;
+
     public Fornecedor cadastrar(Fornecedor fornecedor){
+
+        fornecedor.setEndereco(enderecoService.buscarPorId(fornecedor.getEndereco().getId()).get());
 
         return fornecedorRepository.save(fornecedor);
     }
