@@ -13,7 +13,12 @@ public class ClienteService {
     @Autowired
     ClienteRepository clienteRepository;
 
+    @Autowired
+    EnderecoService enderecoService;
+
     public Cliente cadastrar(Cliente cliente){
+
+        cliente.setEndereco(enderecoService.buscarPorId(cliente.getEndereco().getId()).get());
 
         return clienteRepository.save(cliente);
     }
