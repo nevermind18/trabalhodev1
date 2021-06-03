@@ -1,47 +1,52 @@
-package proj.dev1.dev.controller;
+package proj.dev1.dev.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.stereotype.Service;
+import proj.dev1.dev.model.Cliente;
 import proj.dev1.dev.model.Compra;
-import proj.dev1.dev.service.CompraService;
+import proj.dev1.dev.model.Produto;
+import proj.dev1.dev.repository.CompraRepository;
 
 import java.util.List;
 import java.util.Optional;
 
-@RestController
-@RequestMapping(value = "/Compra")
-public class CompraController {
+@Service
+public class CompraService {
 
     @Autowired
-    CompraService compraService;
+    CompraRepository compraRepository;
 
-    @PostMapping("/")
-    public Compra cadastrar(@RequestBody Compra compra){
+    @Autowired
+    ClienteService clienteService;
 
-        return compraService.cadastrar(compra);
+    public Compra cadastrar(Compra compra){
+
+        compra.setCliente(clienteService.buscarPorId(compra.getCliente().getId()).get());
+
+        for (Produto produto:compra.getProdutos()) {
+            compra.setTotal(produto.getValor());
+        }
+
+        return compraRepository.save(compra);
     }
 
-    @GetMapping("/")
+    public Optional<Compra> buscarPorId(long id){
+        return compraRepository.findById(id);
+    }
+
     public List<Compra> listarTodos(){
 
-        return compraService.listarTodos();
+        return compraRepository.findAll();
     }
 
-    @GetMapping("/{id}")
-    public Optional<Compra> buscarPorId(@PathVariable int id){
-        return compraService.buscarPorId(id);
+    public Compra alterar(Compra compra){
+
+        return compraRepository.save(compra);
     }
 
-    @PutMapping("/")
-    public Compra alterar(@RequestBody Compra compra){
+    public void deletar(Compra compra){
 
-        return compraService.alterar(compra);
-    }
-
-    @DeleteMapping("/")
-    public void deletar(@RequestBody Compra compra){
-
-        compraService.deletar(compra);
+        compraRepository.delete(compra);
     }
 
 }
